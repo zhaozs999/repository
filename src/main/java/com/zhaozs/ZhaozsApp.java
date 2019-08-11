@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Hello world!
- * 士大夫凤凰花开记号个可
+ * 士大夫凤凰
  */
 @SpringBootApplication
 @MapperScan("com.zhaozs.dao")

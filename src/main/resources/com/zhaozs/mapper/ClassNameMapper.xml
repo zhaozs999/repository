@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhaozs.dao.CLassNameDao">
+  <resultMap id="resultMap_Class" type="com.zhaozs.entity.ClassName">
+    <id column="ID" property="id"/>
+    <result column="USER_STUDENT_ID" property="userStudentId"/>
+    <result column="P_ID" property="pId"/>
+    <result column="CLASS_NAME" property="className"/>
+    <result column="IS_DELETE" property="isDelete"/>
+  </resultMap>
+  <sql id="sql_class">
+    ID, USER_STUDENT_ID, CLASS_NAME, IS_DELETE, P_ID
+  </sql>
+<!-- 批量添加 -->
+  <insert id="insertBatchClass" parameterType="java.util.List">
+    INSERT ALL
+    <foreach collection="list" item="item" index="index">
+      INTO T_CLASS
+        (ID, USER_STUDENT_ID, CLASS_NAME, P_ID)
+      VALUES
+        (
+          #{item.id, jdbcType = DECIMAL},
+          #{item.userStudentId, jdbcType = DECIMAL},
+          #{item.className, jdbcType = VARCHAR},
+          #{item.pId, jdbcType = DECIMAL}
+        )
+    </foreach>
+      select 1 from dual
+  </insert>
+
+<!-- 批量删除 -->
+  <delete id="deleteBatchClassName" parameterType="java.util.List">
+    <foreach collection="list" item="item" open="begin" close="; end;" separator=";">
+      UPDATE T_CLASS SET IS_DELETE = 1 WHERE ID = #{item.id,jdbcType=DECIMAL}
+    </foreach>
+  </delete>
+
+<!-- 批量修改 -->
+  <update id="updateBatchClassName" parameterType="java.util.List">
+
+    <foreach collection="list" item="item" open="begin" close="; end;" separator=";">
+      UPDATE T_CLASS
+      <set>
+        <if test="item.userStudentId != null">
+          USER_STUDENT_ID = #{item.userStudentId,jdbcType=DECIMAL},
+        </if>
+        <if test="item.pId != null">
+          P_ID = #{item.pId,jdbcType=DECIMAL},
+        </if>
+        <if test="item.className != null">
+          CLASS_NAME = #{item.className,jdbcType=VARCHAR},
+        </if>
+      </set>
+      WHERE ID = #{item.id,jdbcType=DECIMAL}
+    </foreach>
+
+
+  </update>
+
+<!-- 根据id查询 -->
+  <select id="selectByIdClassName" resultMap="resultMap_Class">
+    SELECT
+      <include refid="sql_class"/>
+    FROM
+      T_CLASS
+    WHERE
+      ID = #{id}
+  </select>
+
+<!-- 查询所有 -->
+  <select id="selectAllClassName" resultMap="resultMap_Class">
+    SELECT
+      <include refid="sql_class"/>
+    FROM
+      T_CLASS
+    WHERE
+        1 = 1
+      <if test="isDelete != null">
+        AND IS_DELETE = #{isDelete}
+      </if>
+      <if test="className != null and className != ''">
+        AND CLASS_NAME = #{className}
+      </if>
+  </select>
+
+</mapper>

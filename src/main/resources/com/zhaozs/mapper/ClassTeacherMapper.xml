@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhaozs.dao.ClassTeacherDao">
+  <resultMap id="resultMap" type="com.zhaozs.entity.ClassTeacher">
+    <id column="ID" property="id"/>
+    <result column="CLASS_ID" property="classId"/>
+    <result column="USER_ID" property="userTeacherId"/>
+  </resultMap>
+
+  <sql id="sql">
+    ID, CLASS_ID, USER_ID
+  </sql>
+<!-- 添加 -->
+  <insert id="insertClassTeacher" parameterType="classTeacher">
+    INSERT INTO
+    CLASS_TEACHER
+      (ID, CLASS_ID, USER_ID)
+    VALUES
+      (
+      #{id, jdbcType = DECIMAL},
+      #{classId, jdbcType = DECIMAL},
+      #{userTeacherId, jdbcType = DECIMAL}
+      )
+  </insert>
+
+<!-- 删除 -->
+  <delete id="deleteClassTeacher" parameterType="classTeacher">
+    UPDATE CLASS_TEACHER
+    SET
+      IS_DELETE = 1
+    WHERE
+      ID = #{id, jdbcType = DECIMAL}
+  </delete>
+
+<!-- 修改 -->
+  <update id="updateClassTeachere" parameterType="classTeacher">
+    UPDATE
+      CLASS_TEACHER
+    SET
+      CLASS_ID = #{classId, jdbcType = VARCHAR},
+      USER_ID = #{userTeacherId, jdbcType = DECIMAL}
+    WHERE
+        ID = #{id, jdbcType = DECIMAL}
+
+  </update>
+
+<!-- 查询一个 -->
+  <select id="selectClassTeacher" resultMap="resultMap">
+    SELECT
+      <include refid="sql"/>
+    FROM
+      CLASS_TEACHER
+    WHERE ID = #{id, jdbcType = DECIMAL}
+  </select>
+
+<!-- 查询所有 -->
+  <select id="selectAllClassTeacher" resultMap="resultMap">
+    SELECT
+    <include refid="sql"/>
+    FROM CLASS_TEACHER
+    WHERE
+        IS_DELETE = 0
+  </select>
+
+</mapper>

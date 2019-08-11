@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhaozs.dao.ProceduresDAO">
+  <resultMap id="resultMap_Class" type="com.zhaozs.entity.ClassName">
+    <id column="ID" property="id"/>
+    <result column="USER_STUDENT_ID" property="userStudentId"/>
+    <result column="P_ID" property="pId"/>
+    <result column="CLASS_NAME" property="className"/>
+    <result column="IS_DELETE" property="isDelete"/>
+  </resultMap>
+  <sql id="sql_class">
+    ID, USER_STUDENT_ID, CLASS_NAME, IS_DELETE, P_ID
+  </sql>
+<!-- 存储过程 -->
+  <select id="procedure_test" statementType="CALLABLE" parameterType="java.util.Map">
+    {call p_queryNameAndId_out(#{in_param, mode = IN, jdbcType = DECIMAL},
+                               #{unm, mode = OUT, jdbcType = VARCHAR},
+                               #{pwd, mode = OUT, jdbcType = VARCHAR})}
+  </select>
+
+
+</mapper>

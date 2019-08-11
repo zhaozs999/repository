@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhaozs.dao.UserDao">
+  <resultMap id="resultMap_user" type="com.zhaozs.entity.User">
+    <id column="ID" property="id"/>
+    <result column="USERNAME" property="userName"/>
+    <result column="PASSWORD" property="password"/>
+    <result column="AGE" property="age"/>
+    <result column="GENDER" property="gender"/>
+    <result column="REGIST_DATE" property="regist_date"/>
+    <result column="CATEGORY" property="category"/>
+    <result column="STATUS" property="status"/>
+    <result column="ROLE_ID" property="role_id"/>
+    <result column="JURISDICTION_ID" property="jurisdiction_id"/>
+    <result column="IS_DELETE" property="isDelete"/>
+  </resultMap>
+  <sql id="base_sql">
+    ID, USERNAME, PASSWORD, AGE, GENDER, REGIST_DATE, CATEGORY, STATUS, ROLE_ID, JURISDICTION_ID, IS_DELETE
+  </sql>
+<!-- 注册 -->
+  <insert id="registerUser" parameterType="user">
+    INSERT INTO T_USER
+    (ID, USERNAME, PASSWORD, AGE, GENDER, REGIST_DATE,
+    CATEGORY, STATUS, ROLE_ID, JURISDICTION_ID)
+    VALUES
+    (
+      #{id,jdbcType = DECIMAL},
+      #{userName,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR},
+      #{age,jdbcType=VARCHAR},
+      #{gender,jdbcType=VARCHAR},
+      #{regist_date,jdbcType=TIMESTAMP},
+      #{category,jdbcType=DECIMAL}，
+      #{status,jdbcType=VARCHAR},
+      #{role_id,jdbcType=DECIMAL},
+      #{jurisdiction_id,jdbcType=DECIMAL}
+    )
+  </insert>
+
+<!-- 删除 -->
+  <delete id="deleteById" parameterType="java.math.BigDecimal">
+    update t_user set is_Delete = 1 where id = #{id,jdbcType=DECIMAL}
+  </delete>
+
+<!-- 修改 -->
+  <update id="updateUser" parameterType="user">
+    update t_user
+    <set>
+      <if test="userName != null">
+        username = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        age = #{age,jdbcType=DECIMAL},
+      </if>
+      <if test="category != null">
+        CATEGORY = #{category,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="role_id != null">
+        role_id = #{role_id,jdbcType = DECIMAL},
+      </if>
+      <if test="jurisdiction_id != null">
+        jurisdiction_id = #{jurisdiction_id,jdbcType = DECIMAL}
+      </if>
+    </set>
+    where id = #{id,jdbcType=DECIMAL}
+
+  </update>
+
+<!-- 用户登录 -->
+  <select id="login" resultMap="resultMap_user">
+    SELECT
+      <include refid="base_sql"/>
+    FROM T_USER
+    WHERE USERNAME = #{userName} AND PASSWORD = #{pwd} and CATEGORY = #{category,jdbcType=DECIMAL}
+  </select>
+
+<!-- 根据id查询 -->
+  <select id="selectById" resultMap="resultMap_user">
+    select
+    <include refid="base_sql"/>
+    FROM T_USER
+    WHERE ID = #{id}
+  </select>
+
+<!-- 查询所有 -->
+  <select id="selectAll" resultMap="resultMap_user">
+    SELECT
+    <include refid="base_sql"/>
+    FROM T_USER
+    where
+        1 = 1
+      <if test="isDelete != null">
+        and is_delete = #{isDelete}
+      </if>
+      <if test="userName != null">
+        and username = #{userName}
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+      <if test="gender != null">
+        and gender = #{gender}
+      </if>
+  </select>
+
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhaozs.dao.CourseStudentDao">
+  <resultMap id="resultMap" type="com.zhaozs.entity.CourseStudent">
+    <id column="ID" property="id"/>
+    <result column="USER_ID" property="user_id"/>
+    <result column="COURSE_ID" property="course_id"/>
+  </resultMap>
+
+  <sql id="sql">
+    ID, USER_ID, COURSE_ID
+  </sql>
+<!-- 添加 -->
+  <insert id="insertCourseStudent" parameterType="courseStudent">
+    INSERT INTO
+      STUDENT_COURSE
+        (ID, USER_ID, COURSE_ID)
+      VALUES
+        (
+        #{id,jdbcType = DECIMAL},
+        #{user_id,jdbcType = DECIMAL},
+        #{course_id,jdbcType = DECIMAL},
+        #{job,jdbcType = VARCHAR}
+        )
+  </insert>
+
+<!-- 删除 -->
+  <delete id="deleteCourseStudent" parameterType="java.math.BigDecimal">
+    UPDATE
+      STUDENT_COURSE
+    SET
+      IS_DELETE = 1
+    WHERE
+      ID = #{id, jdbcType = DECIMAL}
+  </delete>
+
+<!-- 修改 -->
+  <update id="updateCourseStudent" parameterType="courseStudent">
+    UPDATE STUDENT_COURSE
+    <set>
+      <if test="user_id != null">
+        USER_ID = #{user_id, jdbcType = DECIMAL}
+      </if>
+      <if test="course_id != null">
+        COURSE_ID = #{course_id, jdbcType = DECIMAL}
+      </if>
+    </set>
+    WHERE ID = #{id, jdbcType = DECIMAL}
+  </update>
+
+<!-- 根据主键查询 -->
+  <select id="selectCourseStudent" parameterType="java.math.BigDecimal">
+    SELECT
+      <include refid="sql"/>
+    FROM
+      STUDENT_COURSE
+    WHERE
+      ID = #{id, jdbcType = DECIMAL}
+  </select>
+
+<!-- 查询所有 -->
+  <select id="selectAllCourseStudent" resultMap="resultMap">
+    SELECT
+      <include refid="sql"/>
+    FROM
+      STUDENT_COURSE
+    WHERE
+      IS_DELETE = 0
+  </select>
+
+</mapper>

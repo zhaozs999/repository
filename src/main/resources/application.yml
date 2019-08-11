@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    #driver-class-name: com.mysql.jdbc.Driver
+    #url: jdbc:mysql://localhost:3306/springboot
+    #username: root
+    #password: 55555
+
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@127.0.0.1:1521:xe
+    username: hr
+    password: 55555
+mybatis:
+  mapper-locations: classpath:com/zhaozs/mapper/*Mapper.xml
+  type-aliases-package: com.zhaozs.entity
+server:
+  port: 9999
+  context-path: /cmfz
+

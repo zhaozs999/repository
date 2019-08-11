@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhaozs.dao.CourseDao">
+  <resultMap id="resultMap" type="com.zhaozs.entity.Course">
+    <id column="ID" property="id"/>
+    <result column="COURSE_NAME" property="courseName"/>
+  </resultMap>
+
+  <sql id="sql_course">
+    ID, COURSE_NAME
+  </sql>
+<!-- 批量添加 -->
+  <insert id="insertBatchCourse" parameterType="java.util.List">
+    INSERT ALL
+      <foreach collection="list" item="item" index="index">
+        INTO T_COURSE
+          (ID, COURSE_NAME)
+        VALUES
+          (
+          #{item.id,jdbcType = DECIMAL},
+          #{item.courseName,jdbcType=VARCHAR}
+          )
+      </foreach>
+    select 1 from dual
+  </insert>
+
+<!-- 批量删除 -->
+  <delete id="deleteBatchCourse" parameterType="java.util.List">
+    <foreach collection="list" item="item" open="begin" close="; end" separator=";">
+      update t_course set is_Delete = 1 where id = #{item.id,jdbcType=DECIMAL}
+    </foreach>
+
+  </delete>
+
+<!-- 批量修改 -->
+  <update id="updateBatchCourse" parameterType="course">
+    <foreach collection="list" item="item" open="begin" close="; end;" separator=";">
+      UPDATE
+          T_COURSE
+      SET
+          COURSE_NAME = #{item.courseName,jdbcType=VARCHAR}
+
+      WHERE
+          ID = #{item.id,jdbcType=DECIMAL}
+    </foreach>
+
+  </update>
+
+<!-- 查询所有 -->
+  <select id="selectAllCourse" resultMap="resultMap">
+    SELECT
+    <include refid="sql_course"/>
+    FROM T_COURSE
+    where
+        is_delete = 0
+  </select>
+
+</mapper>
